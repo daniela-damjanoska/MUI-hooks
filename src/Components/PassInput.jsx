@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useHandleInputValue from '../Hooks/useHandleInputValue';
 
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -10,11 +11,12 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormHelperText from '@mui/material/FormHelperText';
 
 export default function PassInput({ onGetPassSuccess, isSignIn }) {
-    const [password, setPassword] = useState(''),
-        [showPassword, setShowPassword] = useState(false),
+    const [showPassword, setShowPassword] = useState(false),
         [passSuccess, setPassSuccess] = useState(false),
         [passErrors, setPassErrors] = useState(false),
         [helperTextPass, setHelperTextPass] = useState('');
+
+    const { value: password, onChange } = useHandleInputValue();
 
     const validatePasswordSignUp = () => {
         if (password) {
@@ -73,7 +75,7 @@ export default function PassInput({ onGetPassSuccess, isSignIn }) {
                         : () => validatePasswordSignUp()
                 }
                 onFocus={() => setPassErrors(false)}
-                onChange={e => setPassword(e.target.value)}
+                onChange={onChange}
                 endAdornment={
                     <InputAdornment position="end">
                         <IconButton

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import useHandleInputValue from '../Hooks/useHandleInputValue';
 import TextField from '@mui/material/TextField';
 
 export default function UserInput({ onGetUserSuccess, isSignIn }) {
-    const [username, setUsername] = useState(''),
-        [userSuccess, setUserSuccess] = useState(false),
+    const [userSuccess, setUserSuccess] = useState(false),
         [userErrors, setUserErrors] = useState(false),
         [helperTextUser, setHelperTextUser] = useState('');
+
+    const { value: username, onChange } = useHandleInputValue();
 
     const validateUserSignUp = () => {
         if (username) {
@@ -57,7 +59,7 @@ export default function UserInput({ onGetUserSuccess, isSignIn }) {
             }
             onFocus={() => setUserErrors(false)}
             value={username}
-            onChange={e => setUsername(e.target.value)}
+            onChange={onChange}
             sx={{ mb: 3 }}
         />
     );
