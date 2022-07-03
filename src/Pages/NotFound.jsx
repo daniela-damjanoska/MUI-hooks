@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function Blog() {
-    return <div>Not Found</div>;
+export default function NotFound() {
+    return <div>Page not found</div>;
 }
