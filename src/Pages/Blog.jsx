@@ -50,7 +50,7 @@ export default function Blog() {
     };
     const getBlogId = id => setId(id);
 
-    //with useMemo
+    //with useCallback
     // const getSearchValue = useCallback(
     //     value => {
     //         setSearchValue(value);
