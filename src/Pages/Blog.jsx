@@ -13,7 +13,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 export default function Blog() {
     const [data, setData] = useState([]),
         [searchValue, setSearchValue] = useState(''),
-        [id, setId] = useState('');
+        [id, setId] = useState(''),
+        [isFiltering, setIsFiltering] = useState(false);
 
     const matches = useMediaQuery('(min-width:768px)');
 
@@ -21,16 +22,13 @@ export default function Blog() {
         'http://jsonplaceholder.typicode.com/posts/?_limit=20'
     );
 
+    // set data to blogPosts after fetching
     useEffect(() => {
         setData(blogPosts);
     }, [blogPosts]);
 
     useEffect(() => {
-        const filteredBlogs = blogPosts.filter(
-            el =>
-                el.title.includes(searchValue) || el.body.includes(searchValue)
-        );
-        setData(filteredBlogs);
+        searchValue === '' ? setIsFiltering(false) : setIsFiltering(true);
     }, [searchValue]);
 
     useEffect(() => {
@@ -38,29 +36,33 @@ export default function Blog() {
         setData(filteredBlogs);
     }, [id]);
 
-    // const filteredBySearch = useMemo(() => {
-    //     if (!searchValue) return blogPosts;
+    const dataToRender = useMemo(() => {
+        if (!isFiltering) return data;
 
-    //     return blogPosts.filter(
-    //         el =>
-    //             el.title.includes(searchValue) || el.body.includes(searchValue)
-    //     );
-    // }, [searchValue]);
+        return data.filter(
+            el =>
+                el.title.includes(searchValue) || el.body.includes(searchValue)
+        );
+    }, [isFiltering, searchValue, data]);
 
-    // console.log(filteredBySearch);
+    const getSearchValue = value => {
+        setSearchValue(value);
+    };
+    const getBlogId = id => setId(id);
 
-    const getSearchValue = useCallback(
-        value => {
-            setSearchValue(value);
-        },
-        [searchValue]
-    );
-    const getBlogId = useCallback(
-        id => {
-            setId(id);
-        },
-        [id]
-    );
+    //with useMemo
+    // const getSearchValue = useCallback(
+    //     value => {
+    //         setSearchValue(value);
+    //     },
+    //     [searchValue]
+    // );
+    // const getBlogId = useCallback(
+    //     id => {
+    //         setId(id);
+    //     },
+    //     [id]
+    // );
 
     return (
         <>
@@ -82,9 +84,9 @@ export default function Blog() {
                     marginX: matches ? 17 : 7,
                 }}
             >
-                <Search onSearch={getSearchValue} />
+                <Search onSearch={getSearchValue} isFiltering={isFiltering} />
                 <Grid container spacing={4}>
-                    {data.map(({ id, title, body }) => (
+                    {dataToRender.map(({ id, title, body }) => (
                         <Grid item xs={12} lg={6} key={id}>
                             <BlogCard
                                 title={title}
@@ -94,7 +96,7 @@ export default function Blog() {
                             />
                         </Grid>
                     ))}
-                    {data.length === 0 && searchValue && (
+                    {isFiltering && dataToRender.length === 0 && (
                         <Typography
                             variant="body2"
                             component="div"
@@ -104,7 +106,7 @@ export default function Blog() {
                                 mt: 3,
                             }}
                         >
-                            No blog found, please try again!
+                            No post found, please try again!
                         </Typography>
                     )}
                 </Grid>
