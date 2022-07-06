@@ -15,6 +15,7 @@ export default function Search({ onSearch, isFiltering }) {
                     variant="outlined"
                     size="small"
                     fullWidth
+                    sx={{ input: { color: 'primary.main' } }}
                     value={value}
                     onChange={e => setValue(e.target.value)}
                 />

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,7 +21,7 @@ export default function Navbar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar position="static" sx={{ backgroundColor: 'primary.light' }}>
                 <Toolbar>
                     <Typography
                         variant="h6"
@@ -32,7 +31,7 @@ export default function Navbar() {
                             textAlign: 'center',
                         }}
                     >
-                        Welcome to my blog
+                        Welcome
                     </Typography>
                     <IconButton
                         size="large"
@@ -63,8 +62,20 @@ export default function Navbar() {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                        <MenuItem onClick={() => navigate('/')}>
+                        <MenuItem
+                            onClick={handleClose}
+                            sx={{
+                                color: 'primary.main',
+                            }}
+                        >
+                            My account
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => navigate('/')}
+                            sx={{
+                                color: 'primary.main',
+                            }}
+                        >
                             Sign Out
                         </MenuItem>
                     </Menu>

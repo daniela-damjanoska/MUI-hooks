@@ -34,6 +34,7 @@ export default function BlogCard({ title, desc, id, onGetId }) {
                             position: 'absolute',
                             bottom: 10,
                             right: 10,
+                            color: 'primary.main',
                         }}
                     />
                 </CardContent>
