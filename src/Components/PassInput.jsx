@@ -12,48 +12,47 @@ import FormHelperText from '@mui/material/FormHelperText';
 
 export default function PassInput({ onGetPassSuccess, isSignIn }) {
     const [showPassword, setShowPassword] = useState(false),
-        [passSuccess, setPassSuccess] = useState(false),
-        [passErrors, setPassErrors] = useState(false),
-        [helperTextPass, setHelperTextPass] = useState('');
+        [passwordSuccess, setPasswordSuccess] = useState(null),
+        [helperTextPassword, setHelperTextPassword] = useState('');
 
     const { value: password, onChange } = useHandleInputValue();
 
     const validatePasswordSignUp = () => {
-        if (password) {
-            if (password.length < 8) {
-                setPassErrors(true);
-                setHelperTextPass('Password must be at least 8 characters');
-            } else if (!password.match(/^(?=.*?[#!@$%^&*]).{8,}$/)) {
-                setPassErrors(true);
-                setHelperTextPass(
-                    'Password must contains at least one of this characters: !@#$%^&*'
-                );
-            } else if (password.length > 32) {
-                setPassErrors(true);
-                setHelperTextPass('Password must be less than 32 characters');
-            } else {
-                setPassSuccess(true);
-                localStorage.setItem('password', JSON.stringify(password));
-            }
+        if (!password) return;
+
+        if (password.length < 8) {
+            setPasswordSuccess(false);
+            setHelperTextPassword('Password must be at least 8 characters');
+        } else if (!password.match(/^(?=.*?[#!@$%^&*]).{8,}$/)) {
+            setPasswordSuccess(false);
+            setHelperTextPassword(
+                'Password must contains at least one of this characters: !@#$%^&*'
+            );
+        } else if (password.length > 32) {
+            setPasswordSuccess(false);
+            setHelperTextPassword('Password must be less than 32 characters');
+        } else {
+            setPasswordSuccess(true);
+            localStorage.setItem('password', JSON.stringify(password));
         }
     };
 
     const validatePasswordSignIn = () => {
-        if (password) {
-            const passFromLS = JSON.parse(localStorage.getItem('password'));
+        if (!password) return;
 
-            if (passFromLS === password) {
-                setPassSuccess(true);
-            } else {
-                setPassErrors(true);
-                setHelperTextPass(
-                    'Your password is incorrect, please try again'
-                );
-            }
+        const passFromLS = JSON.parse(localStorage.getItem('password'));
+
+        if (passFromLS === password) {
+            setPasswordSuccess(true);
+        } else {
+            setPasswordSuccess(false);
+            setHelperTextPassword(
+                'Your password is incorrect, please try again'
+            );
         }
     };
 
-    onGetPassSuccess(passSuccess);
+    onGetPassSuccess(passwordSuccess);
 
     return (
         <FormControl
@@ -68,13 +67,13 @@ export default function PassInput({ onGetPassSuccess, isSignIn }) {
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
-                error={passErrors ? true : false}
+                error={passwordSuccess === false ? true : false}
                 onBlur={
                     isSignIn
                         ? () => validatePasswordSignIn()
                         : () => validatePasswordSignUp()
                 }
-                onFocus={() => setPassErrors(false)}
+                onFocus={() => setPasswordSuccess(null)}
                 onChange={onChange}
                 endAdornment={
                     <InputAdornment position="end">
@@ -90,9 +89,9 @@ export default function PassInput({ onGetPassSuccess, isSignIn }) {
                 }
                 label="Password"
             />
-            {passErrors && (
+            {passwordSuccess === false && (
                 <FormHelperText error id="password-error">
-                    {helperTextPass}
+                    {helperTextPassword}
                 </FormHelperText>
             )}
         </FormControl>
